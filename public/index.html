@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Repair Number Register</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#121a2b;--panel2:#182338;--line:#29364e;--muted:#9ba9bf;--text:#eef3fb;--accent:#79a8ff;--red:#ff7b86}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#172746 0,transparent 40%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1120px;margin:auto;padding:36px 22px 60px}.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:26px}.eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}h1{font-size:clamp(27px,4vw,38px);margin:5px 0 4px;letter-spacing:-.04em}.sub{color:var(--muted);margin:0}.tag{border:1px solid var(--line);background:#121a2b;border-radius:999px;padding:8px 12px;color:#c5d1e4;font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:22px 0}.card,.panel{background:linear-gradient(145deg,#151f33,#101827);border:1px solid var(--line);border-radius:16px}.card{padding:17px 19px}.card .label{color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em}.number{font-size:34px;font-weight:750;letter-spacing:-.04em;margin-top:3px}.hint{font-size:12px;color:var(--muted)}.panel{padding:21px;margin-top:16px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}h2{font-size:17px;margin:0}.muted{color:var(--muted);font-size:13px}
+.entry{display:flex;gap:10px}.entry input{flex:1;min-width:0}.field,input,textarea,select{background:#0b1322;color:var(--text);border:1px solid #35445e;border-radius:10px;padding:12px 13px;font:inherit;outline:none}.field:focus,input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px #79a8ff20}button{border:0;border-radius:10px;padding:11px 16px;font:700 14px inherit;cursor:pointer;background:var(--accent);color:#081326}button.secondary{background:#26344b;color:#e5edf9;border:1px solid #3a4a64}button.danger{background:#3a202b;color:#ffabb2;border:1px solid #63313d}button:disabled{opacity:.4;cursor:not-allowed}.error{color:#ff929b;min-height:22px;font-size:13px;margin-top:7px}.tools{display:flex;flex-wrap:wrap;gap:9px;margin-top:13px}.tools input{flex:1;min-width:190px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:520px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #263249}th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}td{font-size:14px}.code{font-weight:800;letter-spacing:.04em}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:3px 9px;font-size:11px;color:#d8e4f6}.empty{text-align:center;color:var(--muted);padding:30px 10px}.row-actions button{padding:6px 10px;font-size:12px}.foot{color:#71819a;font-size:12px;text-align:center;margin-top:22px}.report-line{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #263249}.report-line:last-child{border:0}.bar{height:7px;background:#263249;border-radius:99px;overflow:hidden;margin-top:7px}.bar span{display:block;height:100%;background:var(--accent);border-radius:99px}.report-item{flex:1}.report-count{font-weight:800;font-size:18px}
+@media(max-width:700px){main{padding:24px 14px}.cards{grid-template-columns:repeat(2,1fr)}.top{display:block}.tag{display:inline-block;margin-top:12px}.entry{flex-direction:column}.entry button{width:100%}.panel{padding:16px}}
+@media print{
+ body{background:white!important;color:black!important;font:12pt/1.5 Arial,sans-serif}
+ main{max-width:none;padding:0}
+ body *{visibility:hidden!important}
+ #whatsappReport,#whatsappReport *{visibility:visible!important}
+ #whatsappReport{position:absolute;left:0;top:0;width:100%;height:auto;min-height:0;border:0;background:white;color:black;padding:0;white-space:pre-wrap;font:12pt/1.5 monospace;overflow:visible}
+}
+</style></head>
+<body><main>
+<header class="top"><div><div class="eyebrow">Workshop tools · Number register</div><h1>Repair Number Register</h1><p class="sub">Enter C, D and W job numbers. Counts and reports update automatically.</p></div><span class="tag">Browser-based · No Excel required</span></header>
+<section class="cards">
+<div class="card"><div class="label">C numbers</div><div class="number" id="countC">0</div><div class="hint">C-prefix jobs</div></div>
+<div class="card"><div class="label">D numbers</div><div class="number" id="countD">0</div><div class="hint">D-prefix jobs</div></div>
+<div class="card"><div class="label">W numbers</div><div class="number" id="countW">0</div><div class="hint">W-prefix jobs</div></div>
+ <div class="card"><div class="label">O numbers</div><div class="number" id="countO">0</div><div class="hint">O-prefix jobs</div></div>
+ <div class="card"><div class="label">I numbers</div><div class="number" id="countI">0</div><div class="hint">I-prefix jobs</div></div>
+<div class="card"><div class="label">Total jobs</div><div class="number" id="countAll">0</div><div class="hint">All registered numbers</div></div>
+</section>
+<section class="panel">
+<div class="panel-head"><h2>Add job numbers</h2><span class="muted">Any digit length is accepted</span></div>
+<div class="entry"><input id="jobInput" autocomplete="off" placeholder="e.g. C1234, W123, D12345" aria-label="Job number"><button id="addBtn">Add number</button></div>
+<div class="error" id="error" role="status"></div>
+<div class="muted">Accepted format: one letter (C, D or W) followed by one or more digits. Examples: C123, C1234, W7, D12345.</div>
+<div class="tools"><textarea id="bulkInput" rows="2" placeholder="Or paste multiple numbers, separated by commas, spaces or new lines"></textarea><button class="secondary" id="bulkBtn">Add list</button></div>
+</section>
+<section class="panel">
+<div class="panel-head"><div><h2>Number report</h2><div class="muted">Live totals by job-number prefix</div></div><button class="secondary" id="exportBtn">Export CSV</button></div>
+<div id="report"></div>
+<div class="tools" style="margin-top:16px">
+<button id="copyReportBtn">Copy WhatsApp report</button>
+<button class="secondary" id="printReportBtn">Print text report</button>
+</div>
+<textarea id="whatsappReport" rows="9" readonly aria-label="WhatsApp report text" style="width:100%;margin-top:10px;resize:vertical"></textarea>
+<div class="muted">This is plain text. Copy it and paste directly into WhatsApp. The report follows the current search and prefix filter.</div>
+</section>
+<section class="panel">
+<div class="panel-head"><div><h2>Registered numbers</h2><div class="muted" id="listMeta">0 entries</div></div><button class="danger" id="clearBtn">Clear all</button></div>
+<div class="tools" style="margin:0 0 12px"><input id="search" placeholder="Search C123, D1234 or W123..."><select id="filter" aria-label="Filter prefix"><option value="ALL">All prefixes</option><option value="C">C numbers</option><option value="D">D numbers</option><option value="W">W numbers</option><option value="O">O numbers</option><option value="I">I numbers</option></select></div>
+<div class="table-wrap"><table><thead><tr><th>#</th><th>Job number</th><th>Prefix</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table></div>
+</section>
+<div class="foot">Data is saved in this browser on this device. Use Export CSV for a backup or to move the report.</div>
+</main>
+<script>
+const KEY='repair-number-register-v1';
+let jobs=[];
+try{jobs=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(jobs))jobs=[];}catch{jobs=[];}
+const $=id=>document.getElementById(id);
+const PREFIXES=['C','D','W','O','I'];
+const valid=s=>/^[CDWOI]\d+$/i.test(s);
+function save(){localStorage.setItem(KEY,JSON.stringify(jobs));render();}
+function counts(list=jobs){return Object.fromEntries(PREFIXES.map(k=>[k,list.filter(x=>x[0]===k).length]));}
+function updateAddState(){
+ const digits=$('jobInput').value.trim(), candidate=$('jobPrefix').value+digits;
+ const validDigits=/^\d+$/.test(digits), duplicate=validDigits&&jobs.includes(candidate);
+ $('addBtn').disabled=!validDigits||duplicate;
+ $('error').textContent=!digits?'':!validDigits?'Enter digits only.':duplicate?`DENIED: ${candidate} already exists.`:`READY: ${candidate} can be added.`;
+}
+function render(){
+ const c=counts(),total=jobs.length;
+ PREFIXES.forEach(k=>$('count'+k).textContent=c[k]);
+ $('countAll').textContent=total;
+ $('report').innerHTML=PREFIXES.map(k=>`<div class="report-line"><div class="report-item"><strong>${k} numbers</strong><div class="bar"><span style="width:${total?c[k]/total*100:0}%"></span></div></div><div class="report-count">${c[k]}</div></div>`).join('')+`<div class="report-line"><strong>Total registered</strong><strong class="report-count">${total}</strong></div>`;
+ const q=$('search').value.trim().toUpperCase(),f=$('filter').value;
+ const filtered=jobs.map((v,i)=>({v,i})).filter(o=>(f==='ALL'||o.v[0]===f)&&o.v.includes(q));
+ $('listMeta').textContent=`${filtered.length} shown · ${total} total`;
+ $('rows').innerHTML=filtered.length?filtered.map(o=>`<tr><td>${o.i+1}</td><td class="code">${o.v}</td><td><span class="pill">${o.v[0]}</span></td><td class="row-actions"><button class="danger" data-remove="${o.i}">Remove</button></td></tr>`).join(''):'<tr><td colspan="4" class="empty">No job numbers found.</td></tr>';
+ const selected=filtered.map(o=>o.v),sc=counts(selected),now=new Date();
+ const dateLabel=now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+ const timeLabel=now.toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit',hour12:true});
+ const lines=['LAPTOP REPAIR REPORT',`${dateLabel} | ${timeLabel}`,`TOTAL LAPTOPS: ${selected.length}`,
+ ...PREFIXES.map(k=>`${k} Numbers: ${sc[k]}`),'JOB NUMBERS',
+ ...PREFIXES.flatMap(k=>[`${k} NUMBERS`,...(selected.filter(x=>x[0]===k).length?selected.filter(x=>x[0]===k):['None'])]),
+ 'End of report'];
+ $('whatsappReport').value=lines.join(String.fromCharCode(10));
+ updateAddState();
+}
+function addOne(raw){
+ const s=String(raw).trim().toUpperCase();
+ if(!valid(s))return {error:`${s}: invalid format`};
+ if(jobs.includes(s))return {error:`${s}: duplicate`};
+ jobs.push(s);return {added:s};
+}
+function addInput(){
+ const digits=$('jobInput').value.trim(),candidate=$('jobPrefix').value+digits;
+ if(!/^\d+$/.test(digits)||jobs.includes(candidate)){updateAddState();return;}
+ jobs.push(candidate);$('jobInput').value='';save();$('jobInput').focus();
+ $('error').textContent=`ACCEPTED: ${candidate}`;
+}
+$('addBtn').onclick=addInput;
+$('jobInput').addEventListener('input',()=>{$('jobInput').value=$('jobInput').value.replace(/\D/g,'');updateAddState();});
+$('jobPrefix').addEventListener('change',updateAddState);
+$('jobInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('addBtn').disabled)addInput();});
+$('bulkBtn').onclick=()=>{
+ const parts=$('bulkInput').value.split(/[\s,;]+/).filter(Boolean);
+ if(!parts.length){$('error').textContent='Paste at least one job number.';return;}
+ const bad=[],duplicates=[];let added=0;
+ for(const p of parts){const r=addOne(p);if(r.error){(r.error.endsWith('duplicate')?duplicates:bad).push(p.toUpperCase());}else added++;}
+ $('bulkInput').value='';
+ $('error').textContent=`ACCEPTED: ${added} added.`+(duplicates.length?` DENIED duplicates: ${duplicates.join(', ')}.`:'')+(bad.length?` Invalid: ${bad.join(', ')}.`:'');
+ save();
+};
+$('rows').addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(!b)return;jobs.splice(Number(b.dataset.remove),1);save();});
+$('search').addEventListener('input',render);$('filter').addEventListener('change',render);
+$('clearBtn').onclick=()=>{if(!jobs.length)return;if(confirm('Delete every registered number from this browser?')){jobs=[];save();}};
+$('exportBtn').onclick=()=>{const lines=['Job Number,Prefix',...jobs.map(x=>`${x},${x[0]}`)];const blob=new Blob([lines.join('\n')],{type:'text/csv'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='repair-number-report.csv';a.click();URL.revokeObjectURL(url);};
+$('copyReportBtn').onclick=async()=>{const box=$('whatsappReport');try{await navigator.clipboard.writeText(box.value);$('copyReportBtn').textContent='Copied!';setTimeout(()=>{$('copyReportBtn').textContent='Copy WhatsApp report';},1600);}catch{box.focus();box.select();document.execCommand('copy');$('copyReportBtn').textContent='Copied!';setTimeout(()=>{$('copyReportBtn').textContent='Copy WhatsApp report';},1600);}};
+$('printReportBtn').onclick=()=>{window.print();};
+render();
+</script></body></html>
