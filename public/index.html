@@ -30,9 +30,17 @@ main{max-width:1120px;margin:auto;padding:36px 22px 60px}.top{display:flex;justi
 </section>
 <section class="panel">
 <div class="panel-head"><h2>Add job numbers</h2><span class="muted">Any digit length is accepted</span></div>
-<div class="entry"><input id="jobInput" autocomplete="off" placeholder="e.g. C1234, W123, D12345" aria-label="Job number"><button id="addBtn">Add number</button></div>
+<div class="entry" style="flex-direction:column">
+ <label for="jobPrefix" class="muted">Select job prefix</label>
+ <select id="jobPrefix" aria-label="Job number prefix">
+  <option value="C">C</option><option value="D">D</option><option value="W">W</option><option value="O">O</option><option value="I">I</option>
+ </select>
+ <label for="jobInput" class="muted">Enter number</label>
+ <input id="jobInput" type="text" inputmode="numeric" autocomplete="off" placeholder="Enter digits, e.g. 1234" aria-label="Job number digits">
+ <button id="addBtn" disabled>Add number</button>
+</div>
 <div class="error" id="error" role="status"></div>
-<div class="muted">Accepted format: one letter (C, D or W) followed by one or more digits. Examples: C123, C1234, W7, D12345.</div>
+<div class="muted">Select C, D, W, O or I first, then enter digits. The prefix is added automatically and every saved number is uppercase. Duplicate full job numbers are blocked.</div>
 <div class="tools"><textarea id="bulkInput" rows="2" placeholder="Or paste multiple numbers, separated by commas, spaces or new lines"></textarea><button class="secondary" id="bulkBtn">Add list</button></div>
 </section>
 <section class="panel">
